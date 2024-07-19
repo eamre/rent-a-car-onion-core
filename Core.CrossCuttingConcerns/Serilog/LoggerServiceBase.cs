@@ -7,29 +7,70 @@ using System.Threading.Tasks;
 
 namespace Core.CrossCuttingConcerns.Serilog;
 
-public abstract class LoggerServiceBase
+public class LoggerServiceBase
 {
-    protected ILogger Logger { get; set; }
+    public List<ILogger> Loggers { get; set; }
 
-    protected LoggerServiceBase()
+    public LoggerServiceBase()
     {
-        Logger = null;
+        Loggers = [];
     }
 
-    protected LoggerServiceBase(ILogger logger)
+    public LoggerServiceBase(List<ILogger> loggers)
     {
-        Logger = logger;
+        Loggers = loggers;
     }
 
-    public void Verbose(string message) => Logger.Verbose(message);
+    public void AddLogger(ILogger logger)
+    {
+        Loggers.Add(logger);
+    }
 
-    public void Fatal(string message) => Logger.Fatal(message);
+    public void Verbose(string message)
+    {
+        foreach (var logger in Loggers)
+        {
+            logger.Verbose(message);
+        }
+    }
 
-    public void Info(string message) => Logger.Information(message);
+    public void Fatal(string message)
+    {
+        foreach (var logger in Loggers)
+        {
+            logger.Fatal(message);
+        }
+    }
 
-    public void Warn(string message) => Logger.Warning(message);
+    public void Info(string message)
+    {
+        foreach (var logger in Loggers)
+        {
+            logger.Information(message);
+        }
+    }
 
-    public void Debug(string message) => Logger.Debug(message);
+    public void Warn(string message)
+    {
+        foreach (var logger in Loggers)
+        {
+            logger.Warning(message);
+        }
+    }
 
-    public void Error(string message) => Logger.Error(message);
+    public void Debug(string message)
+    {
+        foreach (var logger in Loggers)
+        {
+            logger.Debug(message);
+        }
+    }
+
+    public void Error(string message)
+    {
+        foreach (var logger in Loggers)
+        {
+            logger.Error(message);
+        }
+    }
 }

@@ -30,9 +30,11 @@ public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         TResponse response;
         var cachedResponse = await _cache.GetStringAsync(request.CacheKey, cancellationToken);
 
-        if(cachedResponse != null)
+        if(cachedResponse != null) { 
             response = JsonSerializer.Deserialize<TResponse>(cachedResponse)!;
-        
+            await next();
+        }
+
         else 
             response = await GetResponseAndAddToCache(request, next, cancellationToken);
      
